@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentara Speech Therapy Jeopardy — Host</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #F5A800;
+      --gold-light: #FFD166;
+      --gold-dark: #C88A00;
+      --board-blue: #0B0B8B;
+      --board-blue-hover: #1A1AC8;
+      --board-blue-dark: #07075C;
+      --navy: #0A0A2E;
+      --used: #2a2a2a;
+      --used-text: #555;
+      --white: #ffffff;
+      --green: #00C853;
+      --red: #D50000;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0A0A2E 0%, #0d0d45 100%);
+      border-bottom: 3px solid var(--gold);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo img {
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .logo-fallback {
+      font-family: 'Oswald', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .game-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 3px;
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(245, 168, 0, 0.4);
+      flex: 1;
+    }
+
+    .game-title span {
+      color: var(--gold);
+    }
+
+    /* ── Scoreboard ── */
+    .scoreboard {
+      display: flex;
+      gap: 12px;
+    }
+
+    .score-card {
+      background: var(--board-blue-dark);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 8px 18px;
+      text-align: center;
+      min-width: 140px;
+      position: relative;
+    }
+
+    .score-team-name {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+      cursor: pointer;
+    }
+
+    .score-team-name:hover { text-decoration: underline; }
+
+    .score-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .score-adj {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .score-adj button {
+      background: rgba(245,168,0,0.15);
+      border: 1px solid rgba(245,168,0,0.4);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .score-adj button:hover { background: rgba(245,168,0,0.3); }
+
+    /* ── Board ── */
+    .board-wrap {
+      padding: 16px 20px 8px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .category-header {
+      background: var(--board-blue-dark);
+      border: 2px solid rgba(245,168,0,0.5);
+      border-radius: 8px;
+      padding: 14px 8px;
+      text-align: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      line-height: 1.3;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .q-cell {
+      background: var(--board-blue);
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-family: 'Oswald', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--gold);
+      cursor: pointer;
+      min-height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      user-select: none;
+    }
+
+    .q-cell:hover:not(.used) {
+      background: var(--board-blue-hover);
+      box-shadow: 0 0 18px rgba(245,168,0,0.4);
+      transform: scale(1.03);
+    }
+
+    .q-cell.used {
+      background: var(--used);
+      color: var(--used-text);
+      cursor: default;
+      border-color: transparent;
+    }
+
+    .q-cell.used::after { content: '—'; }
+    .q-cell.used span { display: none; }
+
+    /* ── Question Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: linear-gradient(160deg, #0d0d50 0%, #0A0A2E 100%);
+      border: 3px solid var(--gold);
+      border-radius: 16px;
+      padding: 36px 40px;
+      max-width: 860px;
+      width: 100%;
+      box-shadow: 0 0 60px rgba(245,168,0,0.25);
+      position: relative;
+    }
+
+    .modal-category {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .modal-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 24px;
+      line-height: 1;
+    }
+
+    .modal-clue {
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--white);
+      margin-bottom: 28px;
+      min-height: 80px;
+      text-align: center;
+    }
+
+    .modal-answer {
+      display: none;
+      background: rgba(245,168,0,0.1);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .modal-answer.visible { display: block; }
+
+    /* ── Buzzer Status ── */
+    .buzzer-status {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .buzz-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #555;
+      flex-shrink: 0;
+    }
+
+    .buzz-indicator.open { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .buzz-indicator.buzzed { background: var(--gold); box-shadow: 0 0 10px var(--gold); animation: pulse 0.6s ease-in-out infinite alternate; }
+
+    @keyframes pulse { from { opacity: 1; } to { opacity: 0.4; } }
+
+    .buzz-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .buzz-text.team-buzzed { color: var(--gold); font-size: 20px; }
+
+    /* ── Modal Buttons ── */
+    .modal-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, opacity 0.15s;
+      text-transform: uppercase;
+    }
+
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .btn-correct {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-wrong {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-buzzer {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: var(--white);
+    }
+
+    .btn-reveal {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* ── Footer Controls ── */
+    .footer-bar {
+      padding: 10px 20px 14px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      border-top: 1px solid rgba(245,168,0,0.15);
+    }
+
+    .btn-sm {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      border: none;
+      text-transform: uppercase;
+    }
+
+    .btn-sm:hover { opacity: 0.85; }
+
+    .btn-reset {
+      background: rgba(213,0,0,0.2);
+      border: 1px solid rgba(213,0,0,0.5);
+      color: #ff6b6b;
+    }
+
+    .connection-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #555;
+      margin-right: 6px;
+    }
+
+    .connection-dot.connected { background: var(--green); }
+
+    .status-bar {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      padding-bottom: 4px;
+    }
+
+    /* ── Name Edit Toast ── */
+    .name-edit-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .name-edit-overlay.active { display: flex; }
+
+    .name-edit-box {
+      background: var(--navy);
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 28px 32px;
+      width: 340px;
+      text-align: center;
+    }
+
+    .name-edit-box h3 {
+      font-family: 'Oswald', sans-serif;
+      color: var(--gold);
+      font-size: 18px;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .name-edit-box input {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(245,168,0,0.4);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 18px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      padding: 10px 14px;
+      outline: none;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .name-edit-box input:focus { border-color: var(--gold); }
+
+    .name-edit-btns { display: flex; gap: 10px; justify-content: center; }
+
+    .btn-save {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.6);
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-logo">
+    <img src="sentara-logo.svg" alt="Sentara" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';">
+    <span class="logo-fallback" id="logo-text" style="display:none;">SENTARA</span>
+  </div>
+  <div class="game-title">Speech Therapy <span>JEOPARDY</span></div>
+  <div class="scoreboard">
+    <div class="score-card" id="score-card-1">
+      <div class="score-team-name" id="name1-display" onclick="openNameEdit('team1')">Team 1 ✎</div>
+      <div class="score-value" id="score1">$0</div>
+      <div class="score-adj">
+        <button onclick="adjustScore('team1', -200)">−200</button>
+        <button onclick="adjustScore('team1', 200)">+200</button>
+      </div>
+    </div>
+    <div class="score-card" id="score-card-2">
+      <div class="score-team-name" id="name2-display" onclick="openNameEdit('team2')">Team 2 ✎</div>
+      <div class="score-value" id="score2">$0</div>
+      <div class="score-adj">
+        <button onclick="adjustScore('team2', -200)">−200</button>
+        <button onclick="adjustScore('team2', 200)">+200</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Game Board ── -->
+<div class="board-wrap">
+  <div class="board" id="board"></div>
+</div>
+
+<!-- ── Footer ── -->
+<div class="footer-bar">
+  <span class="status-bar"><span class="connection-dot" id="conn-dot"></span><span id="conn-text">Connecting…</span></span>
+  <button class="btn-sm btn-reset" onclick="confirmReset()">↺ Reset Game</button>
+</div>
+
+<!-- ── Question Modal ── -->
+<div class="modal-overlay" id="questionModal">
+  <div class="modal">
+    <div class="modal-category" id="modal-cat"></div>
+    <div class="modal-value" id="modal-val"></div>
+    <div class="modal-clue" id="modal-clue"></div>
+    <div class="modal-answer" id="modal-answer"></div>
+
+    <div class="buzzer-status">
+      <div class="buzz-indicator" id="buzz-indicator"></div>
+      <div class="buzz-text" id="buzz-text">Waiting for buzzer to open…</div>
+    </div>
+
+    <div class="modal-controls">
+      <button class="btn btn-correct" id="btn-correct" onclick="markCorrect()" disabled>✓ Correct</button>
+      <button class="btn btn-wrong" id="btn-wrong" onclick="markWrong()" disabled>✗ Wrong (−pts)</button>
+      <button class="btn btn-buzzer" id="btn-buzzer" onclick="enableBuzzer()">🔔 Open Buzzer</button>
+      <button class="btn btn-reveal" onclick="revealAnswer()">👁 Reveal Answer</button>
+      <button class="btn btn-close" onclick="closeQuestion()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Name Edit Modal ── -->
+<div class="name-edit-overlay" id="nameEditOverlay">
+  <div class="name-edit-box">
+    <h3 id="name-edit-title">Edit Team Name</h3>
+    <input type="text" id="name-edit-input" placeholder="Enter team name" maxlength="24">
+    <div class="name-edit-btns">
+      <button class="btn-save" onclick="saveTeamName()">Save</button>
+      <button class="btn-cancel" onclick="closeNameEdit()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const socket = io();
+  let categories = [];
+  let usedQuestions = [];
+  let teamNames = { team1: 'Team 1', team2: 'Team 2' };
+  let currentBuzzedTeam = null;
+  let editingTeam = null;
+
+  // ── Connection ──
+  socket.on('connect', () => {
+    document.getElementById('conn-dot').classList.add('connected');
+    document.getElementById('conn-text').textContent = 'Connected';
+  });
+
+  socket.on('disconnect', () => {
+    document.getElementById('conn-dot').classList.remove('connected');
+    document.getElementById('conn-text').textContent = 'Disconnected';
+  });
+
+  // ── State Sync ──
+  socket.on('fullState', ({ categories: cats, gameState }) => {
+    categories = cats;
+    usedQuestions = gameState.usedQuestions || [];
+    teamNames = gameState.teamNames;
+    updateScores(gameState.scores);
+    updateTeamNames(teamNames);
+    buildBoard();
+  });
+
+  socket.on('scoreUpdate', (scores) => updateScores(scores));
+  socket.on('teamNamesUpdate', (names) => { teamNames = names; updateTeamNames(names); });
+
+  socket.on('questionOpened', ({ categoryName, question, categoryIdx, questionIdx }) => {
+    document.getElementById('modal-cat').textContent = categoryName;
+    document.getElementById('modal-val').textContent = `$${question.value}`;
+    document.getElementById('modal-clue').textContent = question.clue;
+    document.getElementById('modal-answer').textContent = question.answer;
+    document.getElementById('modal-answer').classList.remove('visible');
+    setBuzzStatus('open');
+    currentBuzzedTeam = null;
+    document.getElementById('btn-correct').disabled = true;
+    document.getElementById('btn-wrong').disabled = true;
+    document.getElementById('questionModal').classList.add('active');
+  });
+
+  socket.on('buzzed', ({ team, teamName }) => {
+    currentBuzzedTeam = team;
+    setBuzzStatus('buzzed', teamName);
+    document.getElementById('btn-correct').disabled = false;
+    document.getElementById('btn-wrong').disabled = false;
+  });
+
+  socket.on('buzzerEnabled', () => {
+    currentBuzzedTeam = null;
+    setBuzzStatus('open');
+    document.getElementById('btn-correct').disabled = true;
+    document.getElementById('btn-wrong').disabled = true;
+  });
+
+  socket.on('questionClosed', ({ usedId }) => {
+    if (!usedQuestions.includes(usedId)) usedQuestions.push(usedId);
+    updateBoardCell(usedId);
+    document.getElementById('questionModal').classList.remove('active');
+    setBuzzStatus('waiting');
+  });
+
+  // ── Board ──
+  function buildBoard() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    categories.forEach((cat, ci) => {
+      const header = document.createElement('div');
+      header.className = 'category-header';
+      header.textContent = cat.name;
+      board.appendChild(header);
+    });
+    const maxQ = Math.max(...categories.map(c => c.questions.length));
+    for (let qi = 0; qi < maxQ; qi++) {
+      categories.forEach((cat, ci) => {
+        const q = cat.questions[qi];
+        if (!q) { board.appendChild(document.createElement('div')); return; }
+        const id = `${ci}-${qi}`;
+        const cell = document.createElement('div');
+        cell.className = 'q-cell' + (usedQuestions.includes(id) ? ' used' : '');
+        cell.id = `cell-${id}`;
+        cell.innerHTML = `<span>$${q.value}</span>`;
+        if (!usedQuestions.includes(id)) {
+          cell.onclick = () => socket.emit('openQuestion', { categoryIdx: ci, questionIdx: qi });
+        }
+        board.appendChild(cell);
+      });
+    }
+  }
+
+  function updateBoardCell(id) {
+    const cell = document.getElementById(`cell-${id}`);
+    if (cell) { cell.classList.add('used'); cell.onclick = null; }
+  }
+
+  // ── Scores ──
+  function updateScores(scores) {
+    document.getElementById('score1').textContent = `$${scores.team1.toLocaleString()}`;
+    document.getElementById('score2').textContent = `$${scores.team2.toLocaleString()}`;
+  }
+
+  function updateTeamNames(names) {
+    document.getElementById('name1-display').textContent = names.team1 + ' ✎';
+    document.getElementById('name2-display').textContent = names.team2 + ' ✎';
+  }
+
+  function adjustScore(team, amount) {
+    socket.emit('adjustScore', { team, amount });
+  }
+
+  // ── Buzzer Status ──
+  function setBuzzStatus(state, teamName) {
+    const ind = document.getElementById('buzz-indicator');
+    const txt = document.getElementById('buzz-text');
+    ind.className = 'buzz-indicator';
+    txt.className = 'buzz-text';
+    if (state === 'waiting') {
+      txt.textContent = 'Select a question to begin';
+    } else if (state === 'open') {
+      ind.classList.add('open');
+      txt.textContent = 'Buzzer is OPEN — waiting for a team…';
+    } else if (state === 'buzzed') {
+      ind.classList.add('buzzed');
+      txt.classList.add('team-buzzed');
+      txt.textContent = `🔔 ${teamName} buzzed in!`;
+    }
+  }
+
+  // ── Modal Controls ──
+  function markCorrect() { socket.emit('markCorrect'); }
+  function markWrong() { socket.emit('markWrong'); }
+  function enableBuzzer() { socket.emit('enableBuzzer'); }
+  function closeQuestion() { socket.emit('closeQuestion'); }
+  function revealAnswer() { document.getElementById('modal-answer').classList.toggle('visible'); }
+
+  // ── Name Edit ──
+  function openNameEdit(team) {
+    editingTeam = team;
+    const title = team === 'team1' ? teamNames.team1 : teamNames.team2;
+    document.getElementById('name-edit-title').textContent = `Edit: ${title}`;
+    document.getElementById('name-edit-input').value = team === 'team1' ? teamNames.team1 : teamNames.team2;
+    document.getElementById('nameEditOverlay').classList.add('active');
+    setTimeout(() => document.getElementById('name-edit-input').select(), 50);
+  }
+
+  function closeNameEdit() {
+    document.getElementById('nameEditOverlay').classList.remove('active');
+    editingTeam = null;
+  }
+
+  function saveTeamName() {
+    const name = document.getElementById('name-edit-input').value.trim();
+    if (editingTeam && name) {
+      socket.emit('setTeamName', { team: editingTeam, name });
+    }
+    closeNameEdit();
+  }
+
+  document.getElementById('name-edit-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') saveTeamName();
+    if (e.key === 'Escape') closeNameEdit();
+  });
+
+  // ── Reset ──
+  function confirmReset() {
+    if (confirm('Reset the entire game? All scores and used questions will be cleared.')) {
+      socket.emit('resetGame');
+    }
+  }
+</script>
+</body>
+</html>
