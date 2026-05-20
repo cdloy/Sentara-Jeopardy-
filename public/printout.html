@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentara Speech Therapy Jeopardy — Question & Answer Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #fff;
+      color: #1a1a1a;
+      padding: 32px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ── Cover Header ── */
+    .cover {
+      text-align: center;
+      border-bottom: 4px solid #F5A800;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .cover img {
+      height: 56px;
+      margin-bottom: 14px;
+    }
+
+    .cover h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #0A0A2E;
+    }
+
+    .cover h1 span { color: #F5A800; }
+
+    .cover p {
+      font-size: 13px;
+      color: #666;
+      margin-top: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .host-note {
+      background: #FFF8E7;
+      border-left: 4px solid #F5A800;
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .host-note strong { color: #1a1a1a; }
+
+    /* ── Category Section ── */
+    .category {
+      margin-bottom: 36px;
+      page-break-inside: avoid;
+    }
+
+    .category-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      background: #0B0B8B;
+      padding: 10px 16px;
+      border-radius: 6px 6px 0 0;
+      border-left: 6px solid #F5A800;
+    }
+
+    /* ── Question Cards ── */
+    .q-card {
+      border: 1px solid #e0e0e0;
+      border-top: none;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+      page-break-inside: avoid;
+    }
+
+    .q-card:last-child {
+      border-radius: 0 0 6px 6px;
+    }
+
+    .q-card:nth-child(even) { background: #f9f9f9; }
+
+    .value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #F5A800;
+      text-align: center;
+      padding-top: 2px;
+    }
+
+    .clue-block, .answer-block {
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .clue-text {
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+
+    .answer-text {
+      color: #0B0B8B;
+      font-weight: 700;
+    }
+
+    /* ── Divider ── */
+    .col-divider {
+      border-left: 1px dashed #ddd;
+      padding-left: 12px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 2px solid #F5A800;
+      text-align: center;
+      font-size: 11px;
+      color: #aaa;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── Print Styles ── */
+    @media print {
+      body { padding: 20px 28px; }
+      .no-print { display: none; }
+      .category { page-break-inside: avoid; }
+      .q-card { page-break-inside: avoid; }
+    }
+
+    /* ── Print Button ── */
+    .print-btn {
+      display: block;
+      margin: 0 auto 28px;
+      background: #0B0B8B;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 32px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .print-btn:hover { background: #F5A800; color: #000; }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn no-print" onclick="window.print()">🖨 Print This Guide</button>
+
+  <!-- Cover -->
+  <div class="cover">
+    <img src="sentara-logo.svg" alt="Sentara" onerror="this.style.display='none'">
+    <h1>Speech Therapy <span>Jeopardy</span></h1>
+    <p>Host Question &amp; Answer Guide &nbsp;·&nbsp; Better Hearing &amp; Speech Month</p>
+  </div>
+
+  <div class="host-note">
+    <strong>Host Instructions:</strong> Read the <strong>Clue</strong> aloud to both teams. Teams buzz in and respond in the form of a question (e.g. "What is…" or "Who is…"). Use the <strong>Answer</strong> column to verify correctness. Correct = award points · Wrong = deduct points and re-open the buzzer.
+  </div>
+
+  <!-- Category 1 -->
+  <div class="category">
+    <div class="category-title">Category 1 — Speech Therapy Basics</div>
+
+    <div class="q-card">
+      <div class="value">$200</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This national credential — awarded after completing a master's degree and clinical fellowship — allows SLPs to practice independently.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is the CCC-SLP (Certificate of Clinical Competence in Speech-Language Pathology)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$400</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">Along with language and voice, these two additional areas round out the four core domains SLPs assess and treat.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What are articulation and fluency?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$600</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This federal law mandates that eligible children with disabilities receive SLP services in public schools at no cost.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is IDEA (Individuals with Disabilities Education Act)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$800</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This three-part clinical decision-making model blends the best available research, the clinician's expertise, and the patient's own values and preferences.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is Evidence-Based Practice (EBP)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$1000</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This specialized practice area focuses on assessing and rehabilitating the voices of professional performers — singers, actors, and broadcasters.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is Performing Arts Voice (Professional Voice Rehabilitation)?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category 2 -->
+  <div class="category">
+    <div class="category-title">Category 2 — Communication Disorders</div>
+
+    <div class="q-card">
+      <div class="value">$200</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">A fluency disorder marked by involuntary repetitions, prolongations, and blocks in the flow of speech.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is stuttering?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$400</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">Most commonly caused by stroke, this acquired language disorder affects the ability to speak, understand, read, or write.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is aphasia?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$600</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This motor speech disorder results from neurological damage that causes weakness or paralysis of the muscles used for speech.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is dysarthria?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$800</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This childhood disorder involves a persistent difficulty planning and sequencing the precise movements needed for speech — despite normal muscle strength.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is Childhood Apraxia of Speech (CAS)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$1000</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This progressive neurological disease — for which LSVT LOUD therapy was specifically developed — causes a characteristic reduction in vocal loudness called hypophonia.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is Parkinson's Disease?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category 3 -->
+  <div class="category">
+    <div class="category-title">Category 3 — Dysphagia &amp; Swallowing</div>
+
+    <div class="q-card">
+      <div class="value">$200</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">The medical term for difficulty swallowing.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is dysphagia?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$400</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This occurs when food, liquid, or secretions enter the airway below the true vocal folds — a leading cause of aspiration pneumonia.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is aspiration?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$600</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This instrumental study uses fluoroscopy with barium contrast to evaluate the oral, pharyngeal, and esophageal phases of swallowing in real time.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is the Modified Barium Swallow Study (MBSS)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$800</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">Adopted globally in 2019, this framework standardized the language for food texture and liquid thickness levels across all healthcare settings.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is IDDSI (International Dysphagia Diet Standardisation Initiative)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$1000</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This dangerous form of aspiration shows no outward signs — no cough, no voice change — making it detectable only through instrumental assessment.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is silent aspiration?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category 4 -->
+  <div class="category">
+    <div class="category-title">Category 4 — AAC &amp; Technology</div>
+
+    <div class="q-card">
+      <div class="value">$200</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This abbreviation refers to systems and strategies that supplement or replace verbal speech for individuals with severe communication impairments.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is AAC (Augmentative and Alternative Communication)?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$400</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This type of AAC requires no external device — examples include gestures, facial expressions, eye gaze, and sign language.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is unaided AAC?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$600</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">One of the most widely used symbol-based AAC apps for iPad, it generates speech from a grid-based vocabulary system.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is Proloquo2Go?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$800</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This foundational AAC principle holds that all individuals — regardless of disability severity — are capable of communication and deserve the chance to try.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is the Presumption of Competence?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$1000</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">Developed by Beukelman and Mirenda, this AAC assessment framework identifies participation patterns and barriers across five levels: policy, practice, attitude, knowledge, and skill.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is the Participation Model?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category 5 -->
+  <div class="category">
+    <div class="category-title">Category 5 — Better Hearing &amp; Speech Month</div>
+
+    <div class="q-card">
+      <div class="value">$200</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">Better Hearing and Speech Month is observed every year during this month.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is May?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$400</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">The full name of ASHA — the professional association and credentialing body for SLPs and audiologists in the United States.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is the American Speech-Language-Hearing Association?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$600</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">This Oscar-winning 2010 film — starring Colin Firth — brought widespread public attention to the work of speech-language pathologists.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is The King's Speech?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$800</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">ASHA was founded in this year, formally establishing speech-language pathology as a recognized profession.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is 1925?</div>
+      </div>
+    </div>
+
+    <div class="q-card">
+      <div class="value">$1000</div>
+      <div class="clue-block">
+        <div class="label">Clue</div>
+        <div class="clue-text">With over 220,000 members, ASHA's BHSM campaigns remind the public that early identification and treatment of communication disorders can transform this aspect of a person's life.</div>
+      </div>
+      <div class="answer-block col-divider">
+        <div class="label">Answer</div>
+        <div class="answer-text">What is quality of life (or: the ability to communicate / connect with others)?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Sentara Rehab Leadership · Speech Therapy Jeopardy · Better Hearing &amp; Speech Month
+  </div>
+
+</body>
+</html>
